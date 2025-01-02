@@ -12,6 +12,7 @@
   "client": [
     "DynamicLightsMixin",
     "IrisIdMapUniformsMixin",
+    "ModelPartAccessor",
     "PlayerMixin"
   ]
 }

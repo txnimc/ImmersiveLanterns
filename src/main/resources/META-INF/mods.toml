@@ -7,7 +7,7 @@ issueTrackerURL = "https://github.com/${github}/${name}/issues"
 
 [[mods]]
 modId="${id}"
-version="${version}"
+version="${modversion}"
 displayName="${display_name}"
 authors="${author}"
 description="${description}"
@@ -33,7 +33,14 @@ side="BOTH"
 
 [[dependencies."${id}"]]
 modId="accessories"
-mandatory=true
+mandatory=false
+versionRange="*"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies."${id}"]]
+modId="curios"
+mandatory=false
 versionRange="*"
 ordering="NONE"
 side="BOTH"

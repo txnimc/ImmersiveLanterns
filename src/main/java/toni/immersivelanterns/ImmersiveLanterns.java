@@ -1,16 +1,11 @@
 package toni.immersivelanterns;
 
-import io.wispforest.accessories.api.slot.SlotReference;
-import io.wispforest.accessories.pond.AccessoriesAPIAccess;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.util.CommonColors;
+
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import toni.immersivelanterns.foundation.config.AllConfigs;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import io.wispforest.accessories.api.client.*;
+import toni.lib.utils.PlatformUtils;
 
 #if AFTER_21_1
 import net.minecraft.client.DeltaTracker;
@@ -23,6 +18,7 @@ import net.minecraft.client.DeltaTracker;
     import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
     import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.client.ConfigScreenFactoryRegistry;
     import net.neoforged.neoforge.client.gui.ConfigurationScreen;
+import toni.lib.utils.PlatformUtils;
     #endif
 
     #if current_20_1
@@ -32,11 +28,11 @@ import net.minecraft.client.DeltaTracker;
 
 #if FORGE
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import toni.lib.utils.PlatformUtils;
 #endif
 
 
@@ -59,8 +55,6 @@ public class ImmersiveLanterns #if FABRIC implements ModInitializer, ClientModIn
 {
     public static final String MODNAME = "Immersive Lanterns";
     public static final String ID = "immersivelanterns";
-    public static final Logger LOGGER = LogManager.getLogger(MODNAME);
-    public static String debugString = "";
 
     public ImmersiveLanterns(#if NEO IEventBus modEventBus, ModContainer modContainer #endif) {
         #if FORGE
@@ -83,18 +77,24 @@ public class ImmersiveLanterns #if FABRIC implements ModInitializer, ClientModIn
     }
 
     public static boolean isEquipped(Player player) {
-        var accessories = (AccessoriesAPIAccess) player;
-        return accessories.accessoriesCapability().isEquipped(stack -> stack.getItem() == Items.LANTERN || stack.getItem() == Items.SOUL_LANTERN);
+        if (PlatformUtils.isModLoaded("accessories")) {
+            return AccessoriesLanternRenderer.isEquipped(player);
+        }
+        else {
+            return LanternCurioRenderer.isEquipped(player);
+        }
     }
 
-    public static SlotReference getEquipped(Player player) {
+    public static ItemStack getEquipped(Player player) {
         if (!isEquipped(player))
             return null;
 
-        var accessories = (AccessoriesAPIAccess) player;
-        var equipped = accessories.accessoriesCapability().getEquipped(stack -> stack.getItem() == Items.LANTERN || stack.getItem() == Items.SOUL_LANTERN);
-
-        return equipped.get(0).reference();
+        if (PlatformUtils.isModLoaded("accessories")) {
+            return AccessoriesLanternRenderer.getEquipped(player);
+        }
+        else {
+            return LanternCurioRenderer.getEquipped(player);
+        }
     }
 
     #if FABRIC @Override #endif
@@ -112,8 +112,12 @@ public class ImmersiveLanterns #if FABRIC implements ModInitializer, ClientModIn
 
     #if FABRIC @Override #endif
     public void onInitializeClient() {
-        AccessoriesRendererRegistry.registerRenderer(Items.LANTERN, LanternRenderer::new);
-        AccessoriesRendererRegistry.registerRenderer(Items.SOUL_LANTERN, LanternRenderer::new);
+        if (PlatformUtils.isModLoaded("accessories")) {
+            AccessoriesLanternRenderer.register();
+        }
+        else {
+            LanternCurioRenderer.register();
+        }
 
         #if AFTER_21_1
             #if FABRIC

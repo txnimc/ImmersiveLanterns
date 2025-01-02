@@ -2,8 +2,6 @@ package toni.immersivelanterns.foundation.mixin;
 
 import dev.lambdaurora.lambdynlights.api.DynamicLightHandler;
 import dev.lambdaurora.lambdynlights.api.DynamicLightHandlers;
-import io.wispforest.accessories.api.AccessoriesAPI;
-import io.wispforest.accessories.pond.AccessoriesAPIAccess;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

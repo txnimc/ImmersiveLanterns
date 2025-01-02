@@ -1,1 +1,1 @@
-Fixed support with EMF, fixed client dependency error on Fabric servers
+Fix Curios rendering compat bug affecting other items

@@ -21,6 +21,6 @@ public class IrisIdMapUniformsMixin {
         if (equipped == null)
             return instance.getItemInHand(interactionHand);
 
-        return equipped.getStack();
+        return equipped;
     }
 }
