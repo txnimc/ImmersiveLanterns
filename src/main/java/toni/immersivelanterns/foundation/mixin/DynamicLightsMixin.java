@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import toni.immersivelanterns.ImmersiveLanterns;
+import toni.immersivelanterns.foundation.config.AllConfigs;
 
 @Mixin(value = DynamicLightHandlers.class, remap = false)
 public class DynamicLightsMixin {
@@ -19,6 +20,6 @@ public class DynamicLightsMixin {
         DynamicLightHandlers.registerDynamicLightHandler(EntityType.PLAYER, DynamicLightHandler.makeHandler(player -> {
             var isEquipped = ImmersiveLanterns.isEquipped(player);
             return isEquipped ? 15 : 0;
-        }, player -> true));
+        }, player -> AllConfigs.client().waterSensitiveBeltLight.get()));
     }
 }
